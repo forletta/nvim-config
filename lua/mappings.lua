@@ -1,10 +1,91 @@
-require "nvchad.mappings"
-
--- add yours here
-
 local map = vim.keymap.set
 
+-- general
 map("n", ";", ":", { desc = "CMD enter command mode" })
-map("i", "jk", "<ESC>")
+map("n", "<Esc>", "<cmd>noh<CR>", { desc = "general clear highlights" })
+map("n", "<C-c>", "<cmd>%y+<CR>", { desc = "general copy whole file" })
 
--- map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")
+-- line number
+map("n", "<leader>nn", "<cmd>set nu!<CR>", { desc = "toggle line number" })
+map("n", "<leader>nr", "<cmd>set rnu!<CR>", { desc = "toggle relative number" })
+
+-- navigation
+map("i", "<C-b>", "<ESC>^i", { desc = "move beginning of line" })
+map("i", "<C-e>", "<End>", { desc = "move end of line" })
+map("i", "<C-h>", "<Left>", { desc = "move left" })
+map("i", "<C-l>", "<Right>", { desc = "move right" })
+map("i", "<C-j>", "<Down>", { desc = "move down" })
+map("i", "<C-k>", "<Up>", { desc = "move up" })
+
+map("n", "<C-h>", "<C-w>h", { desc = "switch window left" })
+map("n", "<C-l>", "<C-w>l", { desc = "switch window right" })
+map("n", "<C-j>", "<C-w>j", { desc = "switch window down" })
+map("n", "<C-k>", "<C-w>k", { desc = "switch window up" })
+
+-- language
+map({ "n", "x" }, "<leader>lfm", function()
+  require("conform").format { lsp_fallback = true }
+end, { desc = "general format file" })
+
+map("n", "<leader>lds", vim.diagnostic.setloclist, { desc = "LSP diagnostic loclist" })
+
+-- tabufline
+if require("nvconfig").ui.tabufline.enabled then
+  map("n", "<leader>b", "<cmd>enew<CR>", { desc = "buffer new" })
+
+  map("n", "<tab>", function()
+    require("nvchad.tabufline").next()
+  end, { desc = "buffer goto next" })
+
+  map("n", "<S-tab>", function()
+    require("nvchad.tabufline").prev()
+  end, { desc = "buffer goto prev" })
+
+  map("n", "<leader>x", function()
+    require("nvchad.tabufline").close_buffer()
+  end, { desc = "buffer close" })
+end
+
+-- Comment
+map("n", "<leader>/", "gcc", { desc = "toggle comment", remap = true })
+map("v", "<leader>/", "gc", { desc = "toggle comment", remap = true })
+
+-- nvimtree
+map("n", "<leader>ee", "<cmd>NvimTreeFocus<CR>", { desc = "nvimtree open" })
+map("n", "<leader>eh", "<cmd>NvimTreeClose<CR>", { desc = "nvimtree hide" })
+map("n", "<leader>ef", "<cmd>NvimTreeFindFile<CR>", { desc = "nvimtree find file" })
+
+-- telescope
+map("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "telescope find files" })
+map("n", "<leader>fg", "<cmd>Telescope live_grep<CR>", { desc = "telescope live grep" })
+map("n", "<leader>fb", "<cmd>Telescope buffers<CR>", { desc = "telescope find buffers" })
+
+map("n", "<leader>ft", function()
+  require("nvchad.themes").open()
+end, { desc = "telescope color schemes" })
+
+map(
+  "n",
+  "<leader>fa",
+  "<cmd>Telescope find_files follow=true no_ignore=true hidden=true<CR>",
+  { desc = "telescope find all files" }
+)
+
+-- terminal
+map("t", "<C-x>", "<C-\\><C-N>", { desc = "terminal escape terminal mode" })
+
+map("n", "<leader>th", function()
+  require("nvchad.term").new { pos = "sp", id = "mainTerm" }
+end, { desc = "terminal new horizontal term" })
+
+map("n", "<leader>tv", function()
+  require("nvchad.term").new { pos = "vsp", id = "mainTerm" }
+end, { desc = "terminal new vertical term" })
+
+map({ "n", "t" }, "<A-v>", function()
+  require("nvchad.term").toggle { pos = "vsp", id = "mainTerm" }
+end, { desc = "terminal toggleable vertical term" })
+
+map({ "n", "t" }, "<A-h>", function()
+  require("nvchad.term").toggle { pos = "sp", id = "mainTerm" }
+end, { desc = "terminal toggleable horizontal term" })
