@@ -4,6 +4,10 @@ local map = vim.keymap.set
 map("n", ";", ":", { desc = "CMD enter command mode" })
 map("n", "<Esc>", "<cmd>noh<CR>", { desc = "general clear highlights" })
 map("n", "<C-c>", "<cmd>%y+<CR>", { desc = "general copy whole file" })
+map("v", "<Tab>", ">gv", { desc = "tab selection" })
+map("v", "<S-Tab>", "<gv", { desc = "shift tab selection" })
+map("v", "J", ":move '>+1<CR>gv-gv", { desc = "move selection up" })
+map("v", "K", ":move '<-2<CR>gv-gv", { desc = "move selection up" })
 
 -- line number
 map("n", "<leader>nn", "<cmd>set nu!<CR>", { desc = "toggle line number" })
@@ -23,11 +27,17 @@ map("n", "<C-j>", "<C-w>j", { desc = "switch window down" })
 map("n", "<C-k>", "<C-w>k", { desc = "switch window up" })
 
 -- language
-map({ "n", "x" }, "<leader>lfm", function()
+map({ "n", "x", "v" }, "<leader>lf", function()
   require("conform").format { lsp_fallback = true }
 end, { desc = "general format file" })
 
-map("n", "<leader>lds", vim.diagnostic.setloclist, { desc = "LSP diagnostic loclist" })
+map("n", "<leader>ld", function()
+  require("telescope.builtin").diagnostics { bufnr = 0 }
+end, { desc = "LSP local diagnostics" })
+
+map("n", "<leader>lD", function()
+  require("telescope.builtin").diagnostics()
+end, { desc = "LSP workspace diagnostics" })
 
 -- tabufline
 if require("nvconfig").ui.tabufline.enabled then
