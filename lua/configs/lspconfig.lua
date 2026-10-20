@@ -27,7 +27,7 @@ end
 
 nvchadlsp.defaults()
 
-local servers = { "html", "cssls", "rust_analyzer", "ts_ls", "clangd" }
+local servers = { "clangd", "rust_analyzer", "pylsp", "html", "cssls", "ts_ls" }
 vim.lsp.enable(servers)
 
 vim.lsp.config["rust_analyzer"] = {
